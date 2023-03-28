@@ -1,0 +1,103 @@
+A
+---
+class Solution {
+public:
+    vector<int> evenOddBit(int n) {
+        int even = 0 , odd = 0;
+        for(int i = 0 ; i <= log2(n) ; i++){
+            if((n>>i)&1){
+                if(i%2==0)even++;
+                else odd++;
+            }
+        }
+        return {even,odd};
+    }
+};
+
+
+B
+---
+// i am just checking if next time is distance of exact of knight
+class Solution {
+public:
+    bool checkValidGrid(vector<vector<int>>& grid) {
+        int n=  grid.size();
+        pair<int,int> time[n*n];
+        for(int i = 0 ; i < n ; i++){
+            for(int j = 0 ; j < n ; j++){
+                time[grid[i][j]] = {i,j};
+            }
+        }
+        if(time[0].first!=0 or time[0].second!=0) return false;
+        
+        for(int t = 1 ; t < n*n ; t++){
+            auto [xx,yy] = time[t];
+            auto [x,y] = time[t-1];
+            int difx = abs(xx-x);
+            int dify = abs(yy-y);
+            if((difx==2 and dify==1) or (difx==1 and dify==2)){
+                
+            }else{
+                return false;
+            }
+        }
+        return true;
+    }
+};
+
+C
+---
+class Solution {
+public:
+    int beautifulSubsets(vector<int>& nums, int k) {
+        int n = nums.size();
+        sort(nums.begin(),nums.end());
+        
+        vector<int> cont(1005,0);
+        for(int i = 0 ; i <n ; i++){
+            for(int j = 0 ; j < n ; j++){
+                if(abs(nums[i]-nums[j]) == k) cont[i] |= (1<<j);
+            }
+        }
+        /*
+        1. first we count the number which are at distant k  , so we mark the indexes
+        2. then we check which subset is good
+        */
+        int result = 0;
+        
+        for(int sub = 1 ; sub < (1<<n) ; sub++){
+            
+            bool is_bad = false;
+            for(int i = 0 ; i < n ; i++){
+                if(((1<<i)&sub) == 0) continue;
+                
+                if(sub & cont[i]){
+                    is_bad = true;
+                    break;
+                }
+            }
+            if(!is_bad) result++;
+        }
+        return result;
+    }
+};
+
+D
+---
+class Solution {
+public:
+    int findSmallestInteger(vector<int>& nums, int value) {
+        int n = nums.size();
+        map<int,int> m;
+        for(int i = 0 ; i < n ; i++){
+            m[(nums[i]%value + value)%value]++;
+        }
+        for(int i = 0 ; i <= n ; i++){
+            if(m[i%value] > 0) m[i%value]--;
+            else{
+                return i;
+            }
+        }
+        return n;
+    }
+};
